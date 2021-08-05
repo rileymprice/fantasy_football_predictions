@@ -90,15 +90,18 @@ class Database:
                         );"""
         )
 
-    def create_player(self, name, birth_date, team, pfr_url_name, espn_id=00000):
+    def create_player(
+        self, name, search_name, birth_date, team, pfr_url_name, espn_id=00000
+    ):
         try:
             logger.info(
-                f"Adding player name={name} birthdate={birth_date} team={team} pfr_url={pfr_url_name} espn_id={espn_id} "
+                f"Adding player name={name} search_name={search_name} birthdate={birth_date} team={team} pfr_url={pfr_url_name} espn_id={espn_id} "
             )
             self.cur.execute(
-                "INSERT INTO players (name,birth_date,team,pfr_url_name,espn_id) VALUES (?,?,?,?,?)",
+                "INSERT INTO players (name,search_name,birth_date,team,pfr_url_name,espn_id) VALUES (?,?,?,?,?,?)",
                 (
                     name,
+                    search_name,
                     birth_date,
                     team,
                     pfr_url_name,

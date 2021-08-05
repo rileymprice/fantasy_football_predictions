@@ -1,2 +1,1 @@
-percent = "60%"
-print(percent[:-1])
+print(0 % 5)
