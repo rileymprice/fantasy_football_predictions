@@ -33,7 +33,7 @@ def search_name_format(player_name):
     return player_name
 
 
-def team_map(team_abbr):
+def team_map(team):
     team_mapper = {
         "ARI": "ARI",
         "ATL": "ATL",
@@ -68,8 +68,25 @@ def team_map(team_abbr):
         "TAM": "TB",
         "TEN": "TEN",
         "WAS": "WAS",
-    }
-    return team_mapper[team_abbr]
+        'Buffalo Bills': 'BUF',
+        'Miami Dolphins': 'MIA',
+        'New England Patriots': 'NE',
+        'New York Jets': 'NJY',
+        'New York Giants': 'NYG',
+        'Pittsburgh Steelers': 'PIT',
+        'Baltimore Ravens': 'BAL',
+        'Cleveland Browns': 'CLE',
+        'Cincinnati Bengals': 'CIN',
+        'Tennessee Titans': 'TEN',
+        'Indianapolis Colts': 'IND',
+        'Houston Texans': 'HOU',
+        'Jacksonville Jaguars': 'JAX',
+        'Kansas City Chiefs': 'KC',
+        'Las Vegas Raiders': 'LV',
+        'Los Angeles Chargers': 'LAC',
+        'Denver Broncos': 'DEN'
+        }
+    return team_mapper[team]
 
 def get_player_stats():
     start_time = perf_count`er()
@@ -235,18 +252,32 @@ def get_team_rankings():
         soup = BeautifulSoup(teaam_page_content,'html.parser')
         afc_table = soup.find(id="AFC")
         nfc_table = soup.find(id='NFC')
+        afc_teams = parse_team_table(afc_table)
+        nfc_teams = parse_team_table(nfc_table)
 
 def parse_team_table(table):
     table_body = table.find('tbody')
     rows = table_body.find_all('tr')
+    teams = []
+    default_team_info = {'team': 0,'team_abbr':0,'win_loss_percent':0,'margin_of_victory':0,'strecngth_of_schedule':0,'offense_srs':0,'defense_srs':0}
     for row in rows:
+        #skip every 5 rows due to titles
         if row['data-row']%5 == 0:
             continue
+        team_info = default_team_info.copy()
         team = row.find(attrs={"data-stat": "team"}).find("a").text
+        team_abbr = team_map(team)
         win_loss_percentage = get_stat(row,'win_loss_perc')
         margin_of_victory = get_stat(row,'mov')
         strength_of_schedule = get_stat(row,'sos_total')
-        offense_rank = get_stat(row,'srs_offense')
-        defense_rank = get_stat(row,'srs_defense')
-        
-
+        offense_srs = get_stat(row,'srs_offense')
+        defense_srs = get_stat(row,'srs_defense')
+        team_info['team'] = team
+        team_info['team_abbr'] = team_abbr
+        team_info['win_loss_percent'] = win_loss_percentage
+        team_info['margin_of_victory'] = margin_of_victory
+        team_info['strength_of_schedule'] = strength_of_schedule
+        team_info['offense_srs'] = offense_srs
+        team_info['defense_srs'] = defense_srs
+        teams.append(team_info)
+    return teams
