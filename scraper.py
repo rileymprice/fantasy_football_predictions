@@ -2,12 +2,14 @@ from bs4 import BeautifulSoup
 import requests
 import csv
 from time import perf_counter
+import pandas as pd
 
 
 # Get all players and url names
 years = [year for year in range(2019, 2021)]
 # years = [2020]
 MAX_RETRY = 3
+all_player_fantasy_points = {}
 
 
 def get_stat(row, stat_name):
@@ -24,7 +26,7 @@ def name_format(player_name):
     trash_characters = [".", "-", "'", "Jr", "IIII", "III", "II"]
     for char in trash_characters:
         player_name = player_name.replace(char, "")
-    return player_name
+    return player_name.strip()
 
 
 def search_name_format(player_name):
@@ -89,7 +91,7 @@ def team_map(team):
     return team_mapper[team]
 
 def get_player_stats():
-    start_time = perf_count`er()
+    start_time = perf_counter()
     with open("data.csv", "w") as file:
         writer = csv.writer(file)
         header = [
@@ -163,6 +165,7 @@ def get_player_stats():
                 birthdate = birthdate_data["data-birth"]
                 print(year, player_name)
                 stats_table = stats_soup.find(id="stats").find("tbody")
+                stats_df = pd.read_html(player_gamelog_url)
                 stats_rows = stats_table.find_all("tr")
                 for row in stats_rows:
                     row_year = row.find(attrs={"data-stat": "year_id"}).text
@@ -281,3 +284,18 @@ def parse_team_table(table):
         team_info['defense_srs'] = defense_srs
         teams.append(team_info)
     return teams
+
+def get_fantasy_stats(week):
+    positions = ['qb','wr','te','rb']
+    for pos in positions:
+        url = f'https://www.fantasypros.com/nfl/projections/{pos}.php?scoring=PPR&week={week}'
+        data = requests.get(url)
+        data_content = data.content
+        soup = BeautifulSoup(data_content,'html.parser')
+        fantasy_table = soup.find(id='data')
+        fantasy_table = fantasy_table.find('tbody')
+        for player_row in fantasy_table:
+            player_name = player_row.find(class='player-name').text
+            player_name = name_format(player_name)
+            fantasy_points = player_row.find_all('td')[-1]['data-sort-value']
+            all_player_fantasy_points[player_name] = fantasy_points

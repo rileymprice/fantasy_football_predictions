@@ -1,3 +1,13 @@
-test = [("a", 0), ["b", 1], ("c", 2)]
+import pandas as pd
 
-print([x[0] for x in test])
+
+positions = ["qb", "wr", "te", "rb"]
+week = 1
+for pos in positions:
+    url = (
+        f"https://www.fantasypros.com/nfl/projections/{pos}.php?scoring=PPR&week={week}"
+    )
+    data = pd.read_html(url)
+    break
+table = data[0]
+print(table.info)
