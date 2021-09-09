@@ -1,0 +1,14 @@
+{
+	"folders": [
+		{
+			"path": "."
+		}
+	],
+	"settings": {
+		"python.autoComplete.addBrackets": true,
+		"python.pythonPath": "/venv/bin/python3",
+		"python.defaultInterpreterPath": "/~/Documents/GitHub/fantasy_football_predictions/venv/bin/python3.9",
+		"editor.formatOnSave": true,
+		"python.analysis.completeFunctionParens": true
+	}
+}

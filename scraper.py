@@ -70,6 +70,7 @@ def team_map(team):
         "TAM": "TB",
         "TEN": "TEN",
         "WAS": "WAS",
+        '2TM': 'NFL',
         'Buffalo Bills': 'BUF',
         'Miami Dolphins': 'MIA',
         'New England Patriots': 'NE',
@@ -246,7 +247,7 @@ def get_player_stats():
                     writer.writerow(csv_row)
     stop_time = perf_counter()
     print(stop_time - start_time)
-`
+
 def get_team_rankings():
     for year in years:
         team_data_url = f'https://www.pro-football-reference.com/years/{year}/'
