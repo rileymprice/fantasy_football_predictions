@@ -12,7 +12,7 @@ def Logger(filename, logname="app.log"):
     logger.setLevel("DEBUG")
 
     error_file_handler = logging.FileHandler(f"logs/error_{logname}")
-    error_file_handler.setFormatter(log_format, datefmt=date_format)
+    error_file_handler.setFormatter(formatter)
     error_file_handler.setLevel(logging.ERROR)
     logger.addHandler(error_file_handler)
     return logger

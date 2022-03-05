@@ -1,13 +1,5 @@
-import pandas as pd
+from urllib import request
 
+url = "http://nflsavant.com/pbp_data.php?year=2021"
 
-positions = ["qb", "wr", "te", "rb"]
-week = 1
-for pos in positions:
-    url = (
-        f"https://www.fantasypros.com/nfl/projections/{pos}.php?scoring=PPR&week={week}"
-    )
-    data = pd.read_html(url)
-    break
-table = data[0]
-print(table.info)
+request.urlretrieve(url, "nfl_2021.csv")
